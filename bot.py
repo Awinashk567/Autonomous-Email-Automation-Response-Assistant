@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 import time
 from openai import OpenAI
+import gc # 🧹 RAM Saver: Garbage Collector add kiya hai
 
 # --- DUMMY WEB SERVER FOR RENDER ---
 app = Flask(__name__)
@@ -99,6 +100,10 @@ def run_aol_bot():
             context = browser.new_context(ignore_https_errors=True)
             
         page = context.new_page()
+        
+        # 🚀 RAM SAVER TRICK: Block Images, CSS, Fonts, and Media
+        page.route("**/*", lambda route: route.abort() if route.request.resource_type in ["image", "stylesheet", "font", "media"] else route.continue_())
+        
         print("🚀 Going to AOL Mail...")
         page.goto("https://mail.aol.com/", wait_until="domcontentloaded", timeout=60000)
         time.sleep(5) 
@@ -131,7 +136,7 @@ def run_aol_bot():
             except: pass
                 
             page.goto(unread_url, wait_until="domcontentloaded")
-            # ⏳ UPDATE 1: Yahan sleep time 8 se badhakar 15 kar diya hai taaki slow cloud par page load ho sake
+            # ⏳ UPDATE 1: Yahan sleep time 15 kar diya hai taaki slow cloud par page load ho sake
             time.sleep(15) 
             
             clear_popups(page)
@@ -140,7 +145,7 @@ def run_aol_bot():
             email_rows = page.locator('div[data-test-id="message-list"] div[role="article"], a[data-test-id="message-list-item"]')
             
             try:
-                # ⏳ UPDATE 2: Yahan timeout 6000 se badhakar 20000 (20 seconds) kar diya hai
+                # ⏳ UPDATE 2: Yahan timeout 20000 (20 seconds) kar diya hai
                 email_rows.first.wait_for(state="visible", timeout=20000)
             except:
                 print("🎉 ALL CAUGHT UP! Waiting for new mails...")
@@ -226,6 +231,9 @@ def run_aol_bot():
             print("🛡️ Syncing state...")
             page.reload(wait_until="domcontentloaded")
             time.sleep(6)
+            
+            # 🧹 KACHRA SAAF KARO (Clear RAM for next cycle)
+            gc.collect()
 
 if __name__ == "__main__":
     # 1. Start the Flask Dummy Server in a Background Thread
