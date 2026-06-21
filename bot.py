@@ -131,7 +131,8 @@ def run_aol_bot():
             except: pass
                 
             page.goto(unread_url, wait_until="domcontentloaded")
-            time.sleep(8) 
+            # ⏳ UPDATE 1: Yahan sleep time 8 se badhakar 15 kar diya hai taaki slow cloud par page load ho sake
+            time.sleep(15) 
             
             clear_popups(page)
 
@@ -139,7 +140,8 @@ def run_aol_bot():
             email_rows = page.locator('div[data-test-id="message-list"] div[role="article"], a[data-test-id="message-list-item"]')
             
             try:
-                email_rows.first.wait_for(state="visible", timeout=6000)
+                # ⏳ UPDATE 2: Yahan timeout 6000 se badhakar 20000 (20 seconds) kar diya hai
+                email_rows.first.wait_for(state="visible", timeout=20000)
             except:
                 print("🎉 ALL CAUGHT UP! Waiting for new mails...")
                 time.sleep(15) # Agar mail nahi hai, toh thoda ruk kar wapas check karega
