@@ -1,4 +1,4 @@
-# 🚀 Autonomous AOL Mail AI Assistant (Cloud-Ready)
+# 🚀 Autonomous Email Automation & Response Assistant (Cloud-Ready)
 
 An automated AI-powered email assistant built using **Python**, **Playwright**, **Flask**, and **Groq AI (Llama 3.1)**. This bot monitors your AOL Mail inbox 24/7, detects unread messages, filters out promotional ads, generates a natural human-like response contextually, and replies automatically.
 
